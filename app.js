@@ -28,8 +28,9 @@ const messageSchema = new mongoose.Schema({
 const Message = mongoose.model("Message", messageSchema);
 
 
-app.get("/", function(res,req){
-  req.render("home",{Content:homeStartingContent, post:posts });
+app.get("/", async(res,req)=>{
+   const posts  = await Message.find({});
+  req.render("home",{Content:homeStartingContent, post:posts});
 })
 
 app.get("/about", function(res,req){
@@ -45,22 +46,23 @@ app.get("/compose", function(res,req){
 
 })
 
-app.get("/posts/:routeid", function(res,req){
-   const id = _.lowerCase(res.params.routeid);
+app.get("/posts/:postId", async(request,response) => {
+   const requestedPostId = request.params.postId;
+   const found = await Message.findOne({_id:requestedPostId})
+   console.log(found.title);
   
-    posts.forEach(function(post){
-      const typedID = _.lowerCase(post.textTitle);
-
-      if(id === typedID){
-        req.render("post",{Post:post});
-       }else{
-        console.log("Not a match");
-       }
+     if(found !== null){
+      response.render("post", {
+        title: found.title,
+        text: found.text
+      });
+     }
+     express.response.redirect("/");
     });
+   
   
-})
 
-app.post("/", function(request,response){
+app.post("/post", function(request,response){
    const textTitle = request.body.input;
    const textContent = request.body.textarea;
  
@@ -72,7 +74,6 @@ app.post("/", function(request,response){
   receivedText.save();
   response.redirect("/")
 })
-
 
 
 

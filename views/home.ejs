@@ -3,10 +3,10 @@
 
 <p><%= Content %></p>
 
-        <%  post.forEach(function(title){ %>
-              <h1> <%= title.textTitle %> </h1>
-              <p> <%= title.textContent.substring(0,100) + "......" %>
-                <a href= "/posts/<%= title.textTitle %> " >Read More</a>
+        <%  post.forEach(function(message){ %>
+              <h1> <%= message.title  %> </h1>
+              <p> <%= message.text.substring(0,100) + "......" %>
+                <a href= "/posts/<%= message._id %> " >Read More</a>
               </p> 
          <% }) %>
     
